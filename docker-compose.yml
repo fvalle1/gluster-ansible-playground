@@ -1,0 +1,108 @@
+version: '3'
+services:
+    vm:
+        build: base/
+        working_dir: /home/ansible
+        volumes:
+        - ./ansible:/home/ansible
+        - ./base/.ssh:/root/.ssh
+        environment:
+          - ANSIBLE_HOST_KEY_CHECKING=false
+        entrypoint: |
+            /bin/bash -c "
+            ansible-playbook -i hosts main.yml
+            "
+        depends_on:
+            - node1
+            - node2
+        privileged: true
+
+    node1:
+        build: node
+        volumes:
+          - ./node/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+        privileged: true
+        entrypoint: |
+            /bin/bash -c "
+            /usr/sbin/sshd
+            /usr/sbin/glusterd
+            echo 'root:pass' | chpasswd
+            while true
+            do 
+                sleep 1 
+            done"
+
+    node2:
+        build: node
+        volumes:
+          - ./node/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+        privileged: true
+        entrypoint: |
+            /bin/bash -c "
+            /usr/sbin/sshd
+            /usr/sbin/glusterd
+            echo 'root:pass' | chpasswd
+            while true
+            do 
+                sleep 1 
+            done"
+
+    node3:
+      build: node
+      volumes:
+        - ./node/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      privileged: true
+      entrypoint: |
+          /bin/bash -c "
+          /usr/sbin/sshd
+          /usr/sbin/glusterd
+          echo 'root:pass' | chpasswd
+          while true
+          do 
+              sleep 1 
+          done"
+
+    node4:
+      build: node
+      volumes:
+        - ./node/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      privileged: true
+      entrypoint: |
+          /bin/bash -c "
+          /usr/sbin/sshd
+          /usr/sbin/glusterd
+          echo 'root:pass' | chpasswd
+          while true
+          do 
+              sleep 1 
+          done"
+
+    node5:
+      build: node
+      volumes:
+        - ./node/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      privileged: true
+      entrypoint: |
+          /bin/bash -c "
+          /usr/sbin/sshd
+          /usr/sbin/glusterd
+          echo 'root:pass' | chpasswd
+          while true
+          do 
+              sleep 1 
+          done"
+
+    node6:
+      build: node
+      volumes:
+        - ./node/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      privileged: true
+      entrypoint: |
+          /bin/bash -c "
+          /usr/sbin/sshd
+          /usr/sbin/glusterd
+          echo 'root:pass' | chpasswd
+          while true
+          do 
+              sleep 1 
+          done"

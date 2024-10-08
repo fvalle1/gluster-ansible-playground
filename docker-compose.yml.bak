@@ -1,0 +1,31 @@
+version: '3'
+services:
+    vm:
+        build: base/
+        working_dir: /home/ansible
+        volumes:
+        - ./ansible:/home/ansible
+        - ./base/.ssh:/root/.ssh
+        entrypoint: |
+            /bin/bash -c "
+            rm -f ~/.ssh/known_hosts
+            cat /etc/ssh/sshd_config
+            ansible-playbook -i hosts main.yml
+            sleep 100
+            "
+        depends_on:
+            - node1
+            - node2
+        privileged: true
+
+    node1:
+        build: node
+        volumes:
+          - ./node/.ssh/:/root/.ssh/:ro
+        privileged: true
+
+    node2:
+        build: node
+        volumes:
+        - ./node2/id_rsa.pub:/root/.ssh/id_rsa.pub
+        privileged: true
