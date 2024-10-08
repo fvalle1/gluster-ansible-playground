@@ -44,6 +44,8 @@
           - orbital-mini-1
           - orbital-mini-2
           - orbital-mini-3
+      run_once: true
+      when: inventory_hostname == groups['node'][0]
 
     - name: Delete a folder
       ansible.builtin.file:
