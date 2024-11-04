@@ -1,6 +1,6 @@
 #ansible all -m ping
 #ansible-playbook install_packages/main.yml
-#ansible-playbook -i hosts -u elemento --become-password-file psw install_packages/main.yml
+#ansible-playbook -i hosts -u elemento --become-password-file psw ansible/main.yml
 - name: Install basics requirements
   hosts: all
   become: true
@@ -52,12 +52,18 @@
         path: /mnt/elemento-vault/bricks
         state: absent
 
+    - name: Create /mnt/elemento-vault
+      ansible.builtin.file:
+        path: /mnt/elemento-vault/
+        state: directory
+
     - name: create gluster volume
       gluster.gluster.gluster_volume:
         state: present
         name: gv0
         bricks: /mnt/elemento-vault/bricks
         rebalance: yes
+        force: yes
         cluster:
           - orbital-mini-1
           - orbital-mini-2
@@ -85,3 +91,10 @@
         state: present
         dump: 0
         passno: 2
+
+    - name: Add gluster volume to /etc/fstab
+      blockinfile:
+        path: /etc/fstab
+        state: present
+        block: |
+          127.0.0.1:/gv0   /mnt/vault-share      glusterfs  defaults                         0   0
